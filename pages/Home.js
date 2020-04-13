@@ -23,14 +23,8 @@ import profile from '../assets/icons/profile-icon.png';
 import banner_td from '../assets/banner-taawun-dakwah-new.png';
 import logo from '../assets/logo.png'; 
 
-const sampleUser = {
-      "nama": "Fahru Abu Firnas",
-      "email": "fahru@bantany.com",
-      "telepon": "082134577789",
-      "foto_profil": "https://upload.wikimedia.org/wikipedia/commons/4/4a/Mohamed_Salah_2018.jpg"
-}
-
-export default function Home({navigation}) {
+export default function Home({route, navigation}) {
+    const {user} = route.params;
     return (
       <>
         <Slideshow 
@@ -90,7 +84,7 @@ export default function Home({navigation}) {
               <Image source={profile} style={styles.tab_boxIcon}/>
                <Text style={[styles.grid_boxText]}>Profil</Text>
             </View>
-            <TouchableWithoutFeedback  onPress={() => navigation.navigate('Histori Belajar', {user: sampleUser})}>
+            <TouchableWithoutFeedback  onPress={() => navigation.navigate('Histori Belajar', {user: user})}>
               <View style={[styles.grid_box, styles.sofyan_blue]}>
                 <Image source={history} style={styles.tab_boxIcon}/>
                  <Text style={[styles.grid_boxText]}>Histori</Text>

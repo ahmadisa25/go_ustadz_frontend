@@ -1,10 +1,11 @@
 import React, {useState, useEffect} from 'react';
 import Geolocation from 'react-native-geolocation-service';
-import { Alert } from 'react-native';
+import { Alert, AsyncStorage } from 'react-native';
 //import { Provider, connect } from "react-redux";
 import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import Home from './pages/Home';
+import Login from './pages/Login';
 import HomeQuran from './pages/HomeQuran';
 import HomeUmum from './pages/HomeUmum';
 import HomeSyari from './pages/HomeSyari';
@@ -32,22 +33,14 @@ const MyTheme = {
 
 export default function App({navigation}) {
   const [position, setPosition] = useState("");
-  const [user_data, setUserData] = useState("");
+  //const [first_launch, setFirstLaunch] = useState(false);
 
     //nanti dibikin async aja kalau mau fetch user data
-    useEffect( () => {
+    useEffect( async () => {
         Geolocation.getCurrentPosition(
             (position) => {
                 console.log(position);
-                setPosition({"lat": position.coords.latitude, "long": position.coords.longitude});
-                //pengecekan dibawah ini dilakukan after login
-                const user_data = {
-                  "nama": "Abu Ahmad Al-Banjary",
-                  "telepon": "082134577789",
-                  "alamat": "Jl. Salemba Raya no. 16, Kenari, Senen, Jakarta Pusat",
-                  "is_activated": false
-                }
-                setUserData(user_data);
+                setPosition({"lat": position.coords.latitude, "long": position.coords.longitude}); 
             },
             (error) => {
                Alert.alert(
@@ -58,11 +51,18 @@ export default function App({navigation}) {
                   ],
                   {cancelable: true},
                );
-                // See error code charts on the repo in github
                 console.log(error.code, error.message);
             },
             { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
         );
+        //buat onboarding
+        /*const firstLaunch = await AsyncStorage.getItem("alreadyLaunched");
+        if(firstLaunch === null) {
+          AsyncStorage.setItem('alreadyLaunched', true);
+          setFirstLaunch(true);
+        } else{
+          setFirstLaunch(false);
+        }*/
     }, []);
     return (
       <>
@@ -71,11 +71,12 @@ export default function App({navigation}) {
             headerTintColor: 'white',
             headerStyle: { backgroundColor: '#3b5998' },
           }}>
-          {!user_data.is_activated && <> 
+          {/*!first_launch && <> 
             <Stack.Screen options={{headerShown: false}}  name="Screen Satu" component={ScreenOne} />
             <Stack.Screen options={{headerShown: false}}  name="Screen Two" component={ScreenTwo} />
             <Stack.Screen options={{headerShown: false}} name="Screen Three" component={ScreenThree} />
-           </>}
+           </>*/}
+          <Stack.Screen name="Login" options={{headerShown: false}} component={Login} />
           <Stack.Screen name="Beranda" options={{headerLeft: null}} component={Home} />
           <Stack.Screen name="Loading" component={Loading} />
           <Stack.Screen name="Ilmu Qur'an" component={HomeQuran} />

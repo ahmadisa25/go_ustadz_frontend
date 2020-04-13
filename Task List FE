@@ -2,9 +2,10 @@ List Front End:
 
 13. Templating untuk API:
 - Ustadz
-- User:
+- User
+-Error dari API
  1. Halaman Home
 14. Splash Dengan Logo Aplikasi
 15. History order kasih use effect manggil api
 19. Pake redux buat oper user data.
-21. Kalau belum pernah diactivate akunnya baru ke onboarding, ini pengecekannya after login
+21. Kalau belum pernah diactivate akunnya baru ke onboarding, ini pengecekannya after login. Kalau baru pertama kali install muncul
