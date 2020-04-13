@@ -14,7 +14,7 @@ return (
 				<View style={styles.profile_view}>
 					<Image source={{uri: ustadz.foto_profil}} style={styles.avatar}/>
 					<Text style={styles.nama}>{ustadz.nama}</Text>
-					<Text style={styles.alamat}>{ustadz.lulusan}</Text>
+					<Text style={styles.alamat}>{ustadz.alamat}</Text>
 				</View>
 				<View style={styles.profile_view}>
 					<Text style={styles.nama}>Paket Belajar : {paket}</Text>
@@ -48,15 +48,16 @@ const styles = StyleSheet.create({
 	},
 	paragraph: {
 		fontSize: 22,
-		fontWeight: 'bold',
 		textAlign: 'center',
-		color: '#000'
+		color: '#000',
+		fontFamily: "Lato-Bold"	
 	},
 	judul : {
 		color:'#000',
 		fontSize: 13,
 		textAlign: 'center',
 		marginTop: 20,
+		fontFamily: "Lato-Regular"	
 	},
 	profile_view:{
 		paddingTop: 10,
@@ -70,12 +71,14 @@ const styles = StyleSheet.create({
 	},
 	nama:{
 		fontSize:16,
-		fontWeight: 'bold',
-		color: '#000'
+		color: '#000',
+		fontFamily: "Lato-Bold"
 	},
 	alamat: {
 		fontSize:16,
-		color: '#000'
+		color: '#000',
+		fontFamily: "Lato-Regular",
+		textAlign: 'center'
 	},
 	button_view: {
 		marginTop: 20

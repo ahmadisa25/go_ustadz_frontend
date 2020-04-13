@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 //import { Provider, connect } from "react-redux";
 import { 
   StyleSheet, 
@@ -12,20 +12,23 @@ import Slideshow from 'react-native-slideshow';
 
 import sample from '../assets/sample.jpg';
 import home from '../assets/icons/home-icon.png';
-import fiqh from '../assets/icons/fiqh-icon.png';
+import islam from '../assets/icons/islam-icon.png';
 import umum from '../assets/icons/umum-icon.png';
-import tajwid from '../assets/icons/tajwid-icon.png';
+import quran from '../assets/icons/quran-icon.png';
 import article from '../assets/icons/article-alt-icon.png';
 import qa from '../assets/icons/qa-icon.png';
-import schedule from '../assets/icons/schedule-icon.png';
 import ustadz from'../assets/icons/ustadz-icon.png';
-import tv from '../assets/icons/tv-icon.png';
-import akhlaq from '../assets/icons/akhlaq-icon.png';
-import blog from '../assets/icons/blog-icon.png';
-import school from '../assets/icons/school-icon.png';
-import social from '../assets/icons/social-icon.png';
+import history from '../assets/icons/history-icon.png';
+import profile from '../assets/icons/profile-icon.png';
 import banner_td from '../assets/banner-taawun-dakwah-new.png';
 import logo from '../assets/logo.png'; 
+
+const sampleUser = {
+      "nama": "Fahru Abu Firnas",
+      "email": "fahru@bantany.com",
+      "telepon": "082134577789",
+      "foto_profil": "https://upload.wikimedia.org/wikipedia/commons/4/4a/Mohamed_Salah_2018.jpg"
+}
 
 export default function Home({navigation}) {
     return (
@@ -41,17 +44,17 @@ export default function Home({navigation}) {
           <View style={styles.container}>
               <TouchableWithoutFeedback onPress={() => {navigation.navigate("Ilmu Qur'an")}}>
                  <View style={styles.home_grid_box} >
-                  <Image source={tajwid} style={styles.home_grid_boxImage}/>
+                  <Image source={quran} style={styles.home_grid_boxImage}/>
                   <Text style={[styles.home_grid_boxText]}>Ilmu Qur'an</Text>
                 </View>
               </TouchableWithoutFeedback>
               <TouchableWithoutFeedback onPress={() => {navigation.navigate("Ilmu Agama")}}>
                   <View style={styles.home_grid_box}>
-                    <Image source={fiqh} style={styles.home_grid_boxImage}/>
+                    <Image source={islam} style={styles.home_grid_boxImage}/>
                     <Text style={[styles.home_grid_boxText]}>Ilmu Agama</Text>
                   </View>
               </TouchableWithoutFeedback>
-              <TouchableWithoutFeedback>
+              <TouchableWithoutFeedback onPress={() => {navigation.navigate("Ilmu Umum")}}>
                 <View style={styles.home_grid_box}>
                   <Image source={umum} style={styles.home_grid_boxImage}/>
                   <Text style={[styles.home_grid_boxText]}>Ilmu Umum</Text>
@@ -59,39 +62,41 @@ export default function Home({navigation}) {
               </TouchableWithoutFeedback>
           </View>
           <View style={styles.container}>
-              <TouchableWithoutFeedback onPress={() => navigation.navigate('ViewWeb', {url: "https://www.youtube.com/embed?listType=playlist&list=PLGiSRShugneENS8RkpuBqP1_TP-aHhrZp"})}>
-                <View style={styles.home_grid_box}>
-                  <Image source={ustadz} style={styles.home_grid_boxImage}/>
-                  <Text style={[styles.home_grid_boxText]}>Kajian</Text>
-                </View>
-              </TouchableWithoutFeedback>
-              <TouchableWithoutFeedback onPress={() => navigation.navigate('ViewWeb', {url: "https://sofyanruray.info/artikel-app"})}>
+              <TouchableWithoutFeedback onPress={() => navigation.navigate('Artikel', {url: "https://sofyanruray.info/artikel-app"})}>
                 <View style={styles.home_grid_box}>
                   <Image source={article} style={styles.home_grid_boxImage}/>
                   <Text style={[styles.home_grid_boxText]}>Artikel</Text>
                 </View>
               </TouchableWithoutFeedback>
-              <TouchableWithoutFeedback  onPress={() => navigation.navigate('ViewWeb', {url: "https://sofyanruray.info/tanya-jawab-app/"})}>
+              <TouchableWithoutFeedback onPress={() => navigation.navigate('Kajian', {url: "https://www.youtube.com/embed?listType=playlist&list=PLGiSRShugneENS8RkpuBqP1_TP-aHhrZp"})}>
+                <View style={styles.home_grid_box}>
+                  <Image source={ustadz} style={styles.home_grid_boxImage}/>
+                  <Text style={[styles.home_grid_boxText]}>Kajian</Text>
+                </View>
+              </TouchableWithoutFeedback>
+              <TouchableWithoutFeedback  onPress={() => navigation.navigate('Konsultasi', {url: "https://sofyanruray.info/tanya-jawab-app/"})}>
                 <View style={styles.home_grid_box}>
                   <Image source={qa} style={styles.home_grid_boxImage}/>
-                  <Text style={[styles.home_grid_boxText]}>Konsultasi</Text>
+                  <Text style={[styles.home_grid_boxText]}>Tanya Jawab</Text>
                 </View>
               </TouchableWithoutFeedback>
           </View>
-        {/*<View style={styles.tab_box}>
+        <View style={styles.tab_box}>
             <View style={[styles.grid_box, styles.sofyan_blue]}>
               <Image source={home} style={styles.tab_boxIcon} onClick={ () => mapStateToProps({current_page: "Home"})}/>
               <Text style={[styles.grid_boxText]}>Beranda</Text>
             </View>
             <View style={[styles.grid_box, styles.sofyan_blue]}>
-              <Image source={reload} style={styles.tab_boxIcon}/>
-               <Text style={[styles.grid_boxText]}>Muat Ulang</Text>
+              <Image source={profile} style={styles.tab_boxIcon}/>
+               <Text style={[styles.grid_boxText]}>Profil</Text>
             </View>
-            <View style={[styles.grid_box, styles.sofyan_blue]}>
-              <Image source={share} style={styles.tab_boxIcon}/>
-               <Text style={[styles.grid_boxText]}>Bagikan</Text>
-            </View>
-        </View>*/}
+            <TouchableWithoutFeedback  onPress={() => navigation.navigate('Histori Belajar', {user: sampleUser})}>
+              <View style={[styles.grid_box, styles.sofyan_blue]}>
+                <Image source={history} style={styles.tab_boxIcon}/>
+                 <Text style={[styles.grid_boxText]}>Histori</Text>
+              </View>
+            </TouchableWithoutFeedback>
+        </View>
       </>
   );
 }
@@ -103,12 +108,6 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginBottom: 10
    },
-   top_bar:{
-      backgroundColor: '#398AD7',
-      justifyContent: 'center',
-      flex: 0.5,
-      paddingLeft: 15
-   },
   title_bar__textHeading:{
     fontSize: 17,
     color: '#fff'
@@ -119,13 +118,15 @@ const styles = StyleSheet.create({
   }, 
   grid_boxText: {
     color: 'white',
-    marginTop: 2
+    marginTop: 2,
+    fontSize: 11,
+    fontFamily: "Lato-Regular"
   }, 
   sofyan_blue: {
-    backgroundColor: '#398AD7'
+    backgroundColor: '#3b5998'
   },
   tab_box: {
-    backgroundColor: '#398AD7',
+    backgroundColor: '#3b5998',
     alignItems: 'center',
     justifyContent: 'space-between',
     flexDirection: 'row',
@@ -135,8 +136,8 @@ const styles = StyleSheet.create({
     bottom:0
   },
   tab_boxIcon: {
-    width: 25,
-    height:25
+    width:22,
+    height:22
   }, 
   container: {
     backgroundColor: '#fff',
@@ -146,26 +147,13 @@ const styles = StyleSheet.create({
     paddingRight: 15,
     paddingLeft: 15,
     marginTop: 15,
-    marginBottom: 5
+    marginBottom: 5,
+    fontFamily: "Lato-Regular"
   },
   top_image:{
     flex: 2.5,
     width: undefined,
     height: undefined
-  },
-  black_box:{
-    backgroundColor: '#000',
-    opacity: 0.5,
-    padding: 10,
-    width: '100%',
-    position: 'absolute',
-    bottom: 0,
-  },
-  black_box__text:{
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 20,
-    textAlign: 'center'
   },
   grid_box:{
     flex: 3.5,
@@ -179,6 +167,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     width: 50,
     height: 50,
-    fontSize: 11
+    fontSize: 11,
+    fontFamily: "Lato-Regular"
   }
 });

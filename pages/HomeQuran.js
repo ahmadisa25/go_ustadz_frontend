@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 //import { Provider, connect } from "react-redux";
 import { 
   StyleSheet, 
@@ -10,86 +10,58 @@ import {
 } from 'react-native';
 
 import { API_BASE_URL, fetchData } from '../utils';
+import Loading from './Loading';
 
-import sample from '../assets/sample.jpg';
-import home from '../assets/icons/home-icon.png';
-import fiqh from '../assets/icons/fiqh-icon.png';
-import umum from '../assets/icons/umum-icon.png';
-import tajwid from '../assets/icons/tajwid-icon.png';
-import article from '../assets/icons/article-alt-icon.png';
-import qa from '../assets/icons/qa-icon.png';
-import schedule from '../assets/icons/schedule-icon.png';
-import aqidah from'../assets/icons/aqidah-icon.png';
-import tv from '../assets/icons/tv-icon.png';
-import akhlaq from '../assets/icons/akhlaq-icon.png';
-import blog from '../assets/icons/blog-icon.png';
-import school from '../assets/icons/school-icon.png';
-import social from '../assets/icons/social-icon.png';
-import banner_td from '../assets/banner-taawun-dakwah-new.png';
-import logo from '../assets/logo.png'; 
-
-let urlencoded = new URLSearchParams();
-urlencoded.append("action_code", "near_ust");
-urlencoded.append("user_lat", "-6.794105");
-urlencoded.append("user_lon", "106.850579");
-urlencoded.append("topic", "aqidah");
-
-var form = new FormData();
-form.append("action_code", "near_ust");
-form.append("user_lat", "-6.794105");
-form.append("user_lon", "106.850579");
-form.append("topic", "aqidah");
-
-console.log(urlencoded);
+import arab from '../assets/icons/arab-icon.png';
+import tafsir from '../assets/icons/tafsir-icon.png';
 
 const fetchConfig = {
     method: 'POST',
     headers:{ "Content-Type" :"application/x-www-form-urlencoded", 
               "Accept":"application/json" },
     url: API_BASE_URL,
-    body: form
+    body: ""
 }
 
-const onTopicClick = async (click, nav) => {
-    //setLoading(true);
-    const sampleUstadz = {
+const sampleUstadz = {
       "nama": "Abu Ahmad Al-Banjary",
-      "lulusan": "LIPIA Jakarta",
       "telepon": "082134577789",
-      "foto_profil": "https://upload.wikimedia.org/wikipedia/commons/4/4a/Mohamed_Salah_2018.jpg"
-    }
-    nav.navigate('Ustadz Ditemukan', {ustadz: sampleUstadz});
-    /*console.log('masup');
-    const ustadz = await fetchData(fetchConfig);
-    console.log(ustadz);*/
-    /*props.setUstadz(ustadz);
-    props.history.push({
-           pathname: '/gotustadz',
-           state: { ustadz }
-    });*/
+      "alamat": "Jl. Salemba Raya no. 16, Kenari, Senen, Jakarta Pusat",
+      "foto_profil": "https://upload.wikimedia.org/wikipedia/commons/4/4a/Mohamed_Salah_2018.jpg",
+}
+
+
+const onTopicClick = async (click, nav, hook) => {
+    hook(true);
+    //const ustadz = await fetchData(fetchConfig);
+    //console.log(ustadz);
+    //nav.navigate('Ustadz Ditemukan', {ustadz: sampleUstadz});
   }
 
 
 export default function HomeQuran({navigation}) {
+    const [loading, setLoading] = useState(false);
+    if(!loading)
     return (
       <>
           <Text style={styles.subtitle}>Pilih Subtopik</Text>
           <View style={styles.container}>
-              <TouchableWithoutFeedback onPress={() => onTopicClick(this, navigation)}>
+              <TouchableWithoutFeedback onPress={() => onTopicClick(this, navigation, setLoading)}>
                  <View style={styles.grid_box} >
-                  <Image source={tajwid} style={styles.home_grid_boxImage}/>
+                  <Image source={tafsir} style={styles.home_grid_boxImage}/>
                   <Text style={[styles.home_grid_boxText]}>Tafsir</Text>
                 </View>
               </TouchableWithoutFeedback>
               <TouchableWithoutFeedback onPress={() => onTopicClick(this, navigation)}>
                   <View style={styles.grid_box}>
-                    <Image source={fiqh} style={styles.home_grid_boxImage}/>
+                    <Image source={arab} style={styles.home_grid_boxImage}/>
                     <Text style={[styles.home_grid_boxText]}>Tajwid</Text>
                   </View>
               </TouchableWithoutFeedback>
           </View>
       </>
   );
+  else return <Loading/>;
 }
 
 const styles = StyleSheet.create({
@@ -97,7 +69,8 @@ const styles = StyleSheet.create({
     fontSize: 17,
     paddingLeft: 15,
     marginTop: 20,
-    marginBottom: 10
+    marginBottom: 10,
+    fontFamily: "Lato-Regular"
    },
   container: {
     backgroundColor: '#fff',
@@ -105,7 +78,7 @@ const styles = StyleSheet.create({
     paddingRight: 15,
     paddingLeft: 15,
     marginTop: 15,
-    marginBottom: 5
+    marginBottom: 5,
   },
   grid_box:{
     flexDirection: 'row',
@@ -119,6 +92,7 @@ const styles = StyleSheet.create({
   home_grid_boxText: {
     textAlign: 'center',
     fontSize: 18,
-    marginLeft: 20
+    marginLeft: 20,
+    fontFamily: "Lato-Regular"
   }
 });

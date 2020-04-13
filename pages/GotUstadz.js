@@ -52,13 +52,12 @@ const Item = ({ title, price, ...props}) => {
 
 export default function GotUstadz({route, navigation, props}) {
 	const { ustadz } = route.params;
-	console.log(ustadz);
 	return (
 		<ScrollView style={styles.container}>
 			<View style={styles.profile_view}>
 				<Image source={{uri: ustadz.foto_profil}} style={styles.avatar}/>
 				<Text style={styles.judul}>{ustadz.nama}</Text>
-				<Text style={styles.alamat}>{ustadz.lulusan}</Text>
+				<Text style={styles.alamat}>{ustadz.alamat}</Text>
 			</View>
 			<Text style={styles.menu_title}>Pilihan Infaq</Text>
 			<View style={styles.container}>
@@ -74,7 +73,7 @@ export default function GotUstadz({route, navigation, props}) {
 
 const styles = StyleSheet.create({
 	container: {
-		backgroundColor: '#3b5998'
+		backgroundColor: '#3b5998',
 	},
 	profile_view:{
 		paddingTop: 10,
@@ -100,10 +99,13 @@ const styles = StyleSheet.create({
 	},
 	title: {
 		marginTop: 5,
+		marginBottom: 5,
 		fontSize: 20,
+		fontFamily: "Lato-Regular"
 	},
 	price: {
 		fontSize: 15,
+		fontFamily: "Lato-Regular"
 	},
 	menu_title:{
 		color: '#fff',
@@ -111,7 +113,7 @@ const styles = StyleSheet.create({
 		marginTop: 20,
 		marginBottom: 7,
 		fontSize: 16,
-		fontWeight: 'bold'
+		fontFamily: 'Lato-Bold'
 	},
 	tempat: {
 		backgroundColor: '#f9c2ff',
@@ -119,12 +121,14 @@ const styles = StyleSheet.create({
 	},
 	judul:{
 		fontSize:16,
-		fontWeight: 'bold',
-		color: '#fff'
+		color: '#fff',
+		fontFamily: "Lato-Bold"
 	},
 	alamat: {
 		fontSize:16,
-		color: '#fff'
+		color: '#fff',
+		fontFamily: "Lato-Regular",
+		textAlign: 'center'
 	},
 	});
 

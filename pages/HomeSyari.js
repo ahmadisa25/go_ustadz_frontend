@@ -9,6 +9,8 @@ import {
   TouchableWithoutFeedback
 } from 'react-native';
 
+import { API_BASE_URL, fetchData } from '../utils';
+
 import sample from '../assets/sample.jpg';
 import home from '../assets/icons/home-icon.png';
 import fiqh from '../assets/icons/fiqh-icon.png';
@@ -25,6 +27,29 @@ import school from '../assets/icons/school-icon.png';
 import social from '../assets/icons/social-icon.png';
 import banner_td from '../assets/banner-taawun-dakwah-new.png';
 import logo from '../assets/logo.png'; 
+
+const fetchConfig = {
+    method: 'POST',
+    headers:{ "Content-Type" :"application/x-www-form-urlencoded", 
+              "Accept":"application/json" },
+    url: API_BASE_URL,
+    body: ""
+}
+
+const sampleUstadz = {
+      "nama": "Abu Ahmad Al-Banjary",
+      "telepon": "082134577789",
+      "alamat": "Jl. Salemba Raya no. 16, Kenari, Senen, Jakarta Pusat",
+      "foto_profil": "https://upload.wikimedia.org/wikipedia/commons/4/4a/Mohamed_Salah_2018.jpg",
+}
+
+
+const onTopicClick = async (click, nav, hook) => {
+    hook(true);
+    //const ustadz = await fetchData(fetchConfig);
+    //console.log(ustadz);
+    //nav.navigate('Ustadz Ditemukan', {ustadz: sampleUstadz});
+}
 
 
 export default function HomeSyari({navigation}) {
@@ -60,7 +85,8 @@ const styles = StyleSheet.create({
     fontSize: 17,
     paddingLeft: 15,
     marginTop: 20,
-    marginBottom: 10
+    marginBottom: 10,
+    fontFamily: "Lato-Regular"
    },
   container: {
     backgroundColor: '#fff',
@@ -82,6 +108,7 @@ const styles = StyleSheet.create({
   home_grid_boxText: {
     textAlign: 'center',
     fontSize: 18,
-    marginLeft: 20
+    marginLeft: 20,
+    fontFamily: "Lato-Regular"
   }
 });
