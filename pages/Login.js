@@ -68,7 +68,7 @@ class Login extends Component {
 						<TouchableOpacity style={styles.submitButton} onPress={this.login}>
 							<Text style = {styles.submitButtonText}>LOGIN</Text>
 						</TouchableOpacity>
-						<Text style={styles.register_text}>Belum punya akun? Daftar disini</Text>
+						<Text style={styles.register_text}>Belum punya akun? <Text style={styles.register_link}>Daftar disini</Text></Text>
 					</View>
 				</View>
 			</>
@@ -78,9 +78,15 @@ class Login extends Component {
 export default Login;
 
 const styles = StyleSheet.create({
+	register_link:{
+		color: "#9999CC",
+		textDecorationLine: "underline"	
+	},
 	register_text:{
-		marginTop: 20,
-		fontFamily: 'Lato-Regular'
+		marginTop: 30,
+		marginBottom: 5,
+		fontFamily: 'Lato-Regular',
+		textAlign: 'center'
 	},
 	card: {
 		backgroundColor: '#fff',
