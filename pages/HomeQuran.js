@@ -9,7 +9,7 @@ import {
   TouchableWithoutFeedback
 } from 'react-native';
 
-import { API_BASE_URL, fetchData } from '../utils';
+import { NEAR_USTADZ_API, fetchData } from '../utils';
 import Loading from './Loading';
 
 import arab from '../assets/icons/arab-icon.png';
@@ -19,7 +19,7 @@ const fetchConfig = {
     method: 'POST',
     headers:{ "Content-Type" :"application/x-www-form-urlencoded", 
               "Accept":"application/json" },
-    url: API_BASE_URL,
+    url: NEAR_USTADZ_API,
     body: ""
 }
 

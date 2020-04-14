@@ -1,11 +1,17 @@
 import React, { Component } from 'react'
-import { View, Text, TouchableOpacity, TextInput, StyleSheet } from 'react-native'
+import { View, Text, TouchableOpacity, TextInput, StyleSheet } from 'react-native';
+import { fetchData, storeData, LOGIN_API } from '../utils/';
 
 const sampleUser = {
       "nama": "Fahru Abu Firnas",
       "email": "fahru@bantany.com",
       "telepon": "082134577789",
       "foto_profil": "https://upload.wikimedia.org/wikipedia/commons/4/4a/Mohamed_Salah_2018.jpg"
+}
+
+const loginConfig = {
+	method: 'POST',
+    url: LOGIN_API
 }
 
 class Login extends Component {
@@ -27,13 +33,17 @@ class Login extends Component {
 		this.setState({ password: text })
 	}
 
-	login = (event) => {
+	login = async (event) => {
 		//fetch data user disini
 		const { email, password } = this.state;
 		const { navigation } = this.props;
 		if(email && password) {
-			console.log('ow');
-			navigation.navigate("Beranda", {user: sampleUser});
+			loginConfig.body= {
+				email: email,
+				password: password
+			};
+			const response = await fetchData(loginConfig);
+			console.log(response);
 		}
 	}
 

@@ -9,3 +9,4 @@ List Front End:
 15. History order kasih use effect manggil api
 19. Pake redux buat oper user data.
 21. Kalau belum pernah diactivate akunnya baru ke onboarding, ini pengecekannya after login. Kalau baru pertama kali install muncul
+22. Daftar paket konekin ke API
