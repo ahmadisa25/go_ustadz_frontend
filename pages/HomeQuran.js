@@ -6,7 +6,8 @@ import {
   View,
   Image,
   ImageBackground,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
+  AsyncStorage
 } from 'react-native';
 
 import { NEAR_USTADZ_API, fetchData } from '../utils';
@@ -40,6 +41,7 @@ const onTopicClick = async (click, nav, hook) => {
 
 
 export default function HomeQuran({navigation}) {
+    console.log(AsyncStorage.getItem('position'));
     const [loading, setLoading] = useState(false);
     if(!loading)
     return (

@@ -18,6 +18,7 @@ import ScreenOne from './pages/ScreenOne';
 import ScreenTwo from './pages/ScreenTwo';
 import ScreenThree from './pages/ScreenThree';
 
+import { storeData } from './utils';
 
 // import { getIcon } from './assets/icons';
 
@@ -36,11 +37,11 @@ export default function App({navigation}) {
   //const [first_launch, setFirstLaunch] = useState(false);
 
     //nanti dibikin async aja kalau mau fetch user data
-    useEffect( async () => {
+    useEffect( () => {
         Geolocation.getCurrentPosition(
             (position) => {
-                console.log(position);
-                setPosition({"lat": position.coords.latitude, "long": position.coords.longitude}); 
+                setPosition({"lat": position.coords.latitude, "long": position.coords.longitude});
+                storeData('position', JSON.stringify(position)); 
             },
             (error) => {
                Alert.alert(

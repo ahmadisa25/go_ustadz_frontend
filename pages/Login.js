@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { View, Text, TouchableOpacity, TextInput, StyleSheet } from 'react-native';
-import { fetchData, storeData, LOGIN_API } from '../utils/';
+import { fetchData, storeData, LOGIN_API, axiosConfig } from '../utils/';
+import axios from 'axios';
 
 const sampleUser = {
       "nama": "Fahru Abu Firnas",
@@ -10,18 +11,14 @@ const sampleUser = {
 }
 
 const loginConfig = {
-	method: 'POST',
-    url: LOGIN_API
+	api_method: 'POST',
+    api_url: LOGIN_API
 }
 
 class Login extends Component {
-
 	state = {
-		isLogin: false,
 		email: '',
 		password: '',
-		trueemail:"syo@gmail.com",
-		truepassword: "ini sandi",
 	}
 
 
@@ -38,12 +35,38 @@ class Login extends Component {
 		const { email, password } = this.state;
 		const { navigation } = this.props;
 		if(email && password) {
-			loginConfig.body= {
+			let myHeaders = new Headers();
+			myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+			const body = {
 				email: email,
 				password: password
+			}
+
+			let formBody = [];
+
+			for(let key in body) {
+				const encoded_key = encodeURIComponent(key);
+				const encoded_value = encodeURIComponent(body[key]);
+				formBody.push(encoded_key + "=" + encoded_value);
+			}
+
+			formBody = formBody.join("&");
+
+			const requestOptions = {
+			  method: 'POST',
+			  headers: myHeaders,
+			  body: formBody,
+			  redirect: 'follow'
 			};
-			const response = await fetchData(loginConfig);
-			console.log(response);
+
+			fetch("http://ayongaji.wartaqi.com/public/api/login", requestOptions)
+			  .then(response => response.text())
+			  .then(result => {
+			  	storeData('user_data', result);
+			  	navigation.navigate('Beranda')
+			  })
+			  .catch(error => console.log('error', error));
 		}
 	}
 

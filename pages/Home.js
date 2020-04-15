@@ -24,7 +24,6 @@ import banner_td from '../assets/banner-taawun-dakwah-new.png';
 import logo from '../assets/logo.png'; 
 
 export default function Home({route, navigation}) {
-    const {user} = route.params;
     return (
       <>
         <Slideshow 
@@ -84,7 +83,7 @@ export default function Home({route, navigation}) {
               <Image source={profile} style={styles.tab_boxIcon}/>
                <Text style={[styles.grid_boxText]}>Profil</Text>
             </View>
-            <TouchableWithoutFeedback  onPress={() => navigation.navigate('Histori Belajar', {user: user})}>
+            <TouchableWithoutFeedback  onPress={() => navigation.navigate('Histori Belajar')}>
               <View style={[styles.grid_box, styles.sofyan_blue]}>
                 <Image source={history} style={styles.tab_boxIcon}/>
                  <Text style={[styles.grid_boxText]}>Histori</Text>
