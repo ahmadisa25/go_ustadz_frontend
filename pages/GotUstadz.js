@@ -1,21 +1,62 @@
 import React, {useState, useEffect} from 'react';
 import { ScrollView, View, FlatList, StyleSheet, Text, Image, Button } from 'react-native';
 
-import { fetchData, takeData, PAKETS_API, formatRupiah } from '../utils';
+import { fetchData, takeData, PAKETS_API, ORDERS_API, formatRupiah, TOPIC_IDS, errorAlert } from '../utils';
 
-const Item = ({ title, price, ...props}) => {
+async function orderItem(request, nav){
+	let {user, ustadz, topic, paket} = request;
+	user = JSON.parse(user);
+	let orderConfig = {
+	    requestOptions: {
+	        method: 'POST',
+	        body: "",
+	        redirect: 'follow'
+	    },
+	    url: ORDERS_API,
+	    api_token: ""
+	};
+
+	let formBody = [];
+
+	const body = {
+		client_id: user.id,
+		paket_id: paket.id,
+		server_id: ustadz.id, 
+		topic_id: TOPIC_IDS[topic],
+		is_active: 0
+	};
+	orderConfig.requestOptions.body = body;
+	orderConfig.api_token = user.api_token;
+	const order = await fetchData(orderConfig);
+	if(order){
+		nav.navigate("Terima Kasih", {paket: paket.nama, harga_paket: paket.harga, ustadz: ustadz});
+	} else{
+		const ORDER_ERR = 'Maaf saat ini belum bisa dihubungkan dengan ustadz. Coba beberapa saat lagi.'
+		errorAlert(ORDER_ERR);
+		nav.navigate('Beranda');
+	}
+	
+}
+
+const Item = ({ paket, ...props}) => {
+	const request = {
+		paket: paket,
+		ustadz: props.ustadz,
+		user: props.user,
+		topic: props.topic
+	};
 	return (
 		<View style={styles.item}>
 			<View>
-				<Text style={styles.title}>{title}</Text>
-				<Text style={styles.price}>{formatRupiah(price.toString(), 'Rp')}</Text>
+				<Text style={styles.title}>{paket.nama + " " + paket.durasi}</Text>
+				<Text style={styles.price}>{formatRupiah(paket.harga.toString(), 'Rp')}</Text>
 			</View>
 			<View style={styles.item_buttons}>
 				<Button
 				title="pilih"
 				color="#33CC33"
 				borderRadius= '50'
-				onPress={()=> props.nav.navigate("Terima Kasih", {paket: title, harga_paket: price, ustadz: props.ustadz})} //pas on press bawa juga parameter ustadznya
+				onPress={()=> orderItem(request, props.nav)} //pas on press bawa juga parameter ustadznya
 				/>
 			</View>
 		</View>
@@ -52,7 +93,7 @@ export default function GotUstadz({route, navigation, props}) {
 		/*fetchConfig.api_token = api_token;
 		*/
   	 }, []);
-	const { ustadz } = route.params;
+	const { ustadz, topic } = route.params;
 	return (
 		<ScrollView style={styles.container}>
 			<View style={styles.profile_view}>
@@ -64,7 +105,7 @@ export default function GotUstadz({route, navigation, props}) {
 			<View style={styles.container}>
 				{pakets && <FlatList
 				data={pakets}
-				renderItem={({ item }) => <Item title={item.nama + " " + item.durasi} price={item.harga} nav={navigation} ustadz={ustadz}/>}
+				renderItem={({ item }) => <Item paket={item} nav={navigation} ustadz={ustadz} user={user} topic={topic}/>}
 				keyExtractor={item => item.id}
 				/>}
 				{!pakets.length && <Text style={{flex:1, alignItems:'center', color:'#fff'}}>Sedang Memuat....</Text>}

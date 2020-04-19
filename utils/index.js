@@ -5,8 +5,21 @@ const API_BASE_URL = "http://ayongaji.wartaqi.com/public/api/";
 const LOGIN_API = API_BASE_URL + "login";
 const NEAR_USTADZ_API = API_BASE_URL + "nearust";
 const PAKETS_API = API_BASE_URL + "pakets";
+const ORDERS_API = API_BASE_URL + "orders";
 
 const ACTION_ERR = 'Maaf, saat ini permintaan anda tidak dapat diproses';
+
+const TOPIC_IDS = {
+  "Aqidah": 1,
+  "Fiqh": 2,
+  "Tajwid": 3,
+  "Akhlaq": 5,
+  "Tafsir": 6,
+  "Matematika": 7,
+  "Fisika": 8,
+  "Biologi": 9,
+  "Bahasa Inggris": 14
+}
 
 //function dibawah ini milik malasngoding.com
 function formatRupiah(angka, prefix){
@@ -29,13 +42,13 @@ function formatRupiah(angka, prefix){
 
 function errorAlert(error_text){
   return Alert.alert(
-                  'Error',
-                  error_text,
-                  [
-                    {text: 'OK'},
-                  ],
-                  {cancelable: true},
-               );
+    'Error',
+    error_text,
+    [
+      {text: 'OK'},
+    ],
+    {cancelable: true},
+ );
 }
 
 
@@ -88,8 +101,7 @@ function errorParser(url){
 }
 
 async function fetchData(config) {
-  console.log(PAKETS_API);
-    const { url,  requestOptions, api_token } = config;
+    let { url,  requestOptions, api_token } = config;
     let { body } = requestOptions;
     let myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
@@ -101,17 +113,17 @@ async function fetchData(config) {
     requestOptions.headers = myHeaders;
 
     if(body){
-      body = toUrlEncoded(body);
+      requestOptions.body = toUrlEncoded(body);
     }
+
 
     try {
       const response = await fetch(url, requestOptions);
       const result = await response.json();
-      if(!result || !result.length){
+      if(!result || (!result.length && typeof result !== 'object')){
         errorAlert(errorParser(url));
         return false;
       } 
-      console.log(result);
       return result;
     } catch (error) {
         errorAlert(ACTION_ERR);
@@ -187,8 +199,10 @@ export {
   storeData,
   removeData,
   axiosConfig,
+  TOPIC_IDS,
   formatRupiah,
 	LOGIN_API,
+  ORDERS_API,
   PAKETS_API,
   NEAR_USTADZ_API
 }

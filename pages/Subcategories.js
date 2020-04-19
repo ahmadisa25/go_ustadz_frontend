@@ -9,7 +9,7 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 
-import { NEAR_USTADZ_API, fetchData, takeData } from '../utils';
+import { NEAR_USTADZ_API, fetchData, takeData, errorAlert } from '../utils';
 import Loading from './Loading';
 
 import arab from '../assets/icons/arab-icon.png';
@@ -74,9 +74,11 @@ const onTopicClick = async (click, embedded_obj) => {
     fetchConfig.url+="?lat_alamat="+latitude+"&long_alamat="+longitude+"&topic="+topic;
     const ustadz = await fetchData(fetchConfig);
     if(!ustadz){
+      const SELECT_ERR = 'Maaf saat ini pembelajaran belum bisa dilakukan. Coba beberapa saat lagi.'
+      errorAlert(SELECT_ERR);
       nav.navigate('Beranda');
     }
-    nav.navigate('Ustadz Ditemukan', {ustadz: ustadz[0]});
+    nav.navigate('Ustadz Ditemukan', {ustadz: ustadz[0], topic: topic});
   }
 
 
