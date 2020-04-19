@@ -14,11 +14,11 @@ return (
 				<View style={styles.profile_view}>
 					<Image source={{uri: ustadz.foto_profil}} style={styles.avatar}/>
 					<Text style={styles.nama}>{ustadz.nama}</Text>
-					<Text style={styles.alamat}>{ustadz.alamat}</Text>
+					<Text style={styles.alamat}>{ustadz.keahlian}</Text>
 				</View>
 				<View style={styles.profile_view}>
 					<Text style={styles.nama}>Paket Belajar : {paket}</Text>
-					<Text style={styles.alamat}>Harga Paket : {others.harga_paket}</Text>
+					<Text style={styles.alamat}>Harga Paket : Rp{others.harga_paket}</Text>
 					
 				</View>
 			</View>

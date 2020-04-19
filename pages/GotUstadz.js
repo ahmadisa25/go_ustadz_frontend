@@ -1,42 +1,14 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { ScrollView, View, FlatList, StyleSheet, Text, Image, Button } from 'react-native';
 
-const DATA = [
-	{
-		id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-		title: 'Infaq Konsultasi 1',
-		price: 'Rp10.000/jam'
-	},
-	{
-		id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-		title: 'Infaq Konsulatsi 2',
-		price: 'Rp25.000/Jam'
-	},
-	{
-		id: '58694a0f-3da1-471f-bd96-145571e29d72',
-		title: 'Infaq Kursus 1',
-		price: 'Rp50.000/Bulan'
-	},
-	{
-		id: '58694a0f-3da1-471f-bd96-145571e29d72',
-		title: 'Infaq Kursus 2',
-		price: 'Rp60.000/Bulan'
-	},
-	{
-		id: '58694a0f-3da1-471f-bd96-145571e29d72',
-		title: 'Infaq Intensif 1',
-		price: 'Rp150.000/Bulan'
-	},
-];
+import { fetchData, takeData, PAKETS_API, formatRupiah } from '../utils';
 
 const Item = ({ title, price, ...props}) => {
-	//const [showModal, setShowModal] = useState(false);
-	//if(!showModal)
 	return (
 		<View style={styles.item}>
 			<View>
 				<Text style={styles.title}>{title}</Text>
-				<Text style={styles.price}>{price}</Text>
+				<Text style={styles.price}>{formatRupiah(price.toString(), 'Rp')}</Text>
 			</View>
 			<View style={styles.item_buttons}>
 				<Button
@@ -51,21 +23,51 @@ const Item = ({ title, price, ...props}) => {
 }
 
 export default function GotUstadz({route, navigation, props}) {
+	let fetchConfig = {
+	    requestOptions: {
+	        method: 'GET',
+	        body: "",
+	        redirect: 'follow'
+	    },
+	    url: PAKETS_API,
+	    api_token: ""
+	}
+	let [user, setUser] = useState("");
+	const [pakets, setPakets] = useState([]);
+	const getStorageData = async (key) =>{ 
+		const user_data = await takeData(key);
+		setUser(user_data);
+		const { api_token } = JSON.parse(user_data);
+		fetchConfig.api_token = api_token;
+		const data = await fetchData(fetchConfig);
+		if(!data){
+			nav.navigate('Beranda');
+		} else setPakets(data);
+	}
+
+	useEffect( () => {
+		getStorageData('user_data');
+		//let user_data = getStorageData('user_data');
+		//console.log(user_data);
+		/*fetchConfig.api_token = api_token;
+		*/
+  	 }, []);
 	const { ustadz } = route.params;
 	return (
 		<ScrollView style={styles.container}>
 			<View style={styles.profile_view}>
 				<Image source={{uri: ustadz.foto_profil}} style={styles.avatar}/>
 				<Text style={styles.judul}>{ustadz.nama}</Text>
-				<Text style={styles.alamat}>{ustadz.alamat}</Text>
+				<Text style={styles.alamat}>{ustadz.keahlian}</Text>
 			</View>
 			<Text style={styles.menu_title}>Pilihan Infaq</Text>
 			<View style={styles.container}>
-				<FlatList
-				data={DATA}
-				renderItem={({ item }) => <Item title={item.title} price={item.price} nav={navigation} ustadz={ustadz}/>}
+				{pakets && <FlatList
+				data={pakets}
+				renderItem={({ item }) => <Item title={item.nama + " " + item.durasi} price={item.harga} nav={navigation} ustadz={ustadz}/>}
 				keyExtractor={item => item.id}
-				/>
+				/>}
+				{!pakets.length && <Text style={{flex:1, alignItems:'center', color:'#fff'}}>Sedang Memuat....</Text>}
 			</View>
 		</ScrollView>
 	);

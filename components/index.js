@@ -4,11 +4,41 @@ import {
 	Image, 
 	Text,
 	Button,
-	StyleSheet
+	StyleSheet,
+	Alert
 } from 'react-native';
 
+import { takeData } from '../utils';
+import Login from '../pages/Login';
+
+const NO_AUTH_ERR = "Anda belum login. Silakan melakukan login terlebih dahulu";
+
+const ErrorScreen = (error_text) => {
+	return(
+		<View>
+			<Text>{error_text}</Text>
+		</View>
+	);
+}
+
+export const withAuthorization = async (WrappedComponent) => {
+	const user_data = await takeData("user_data");
+	if(!user_data.email){
+		Alert.alert(
+                  'Oops...Terjadi Kesalahan',
+                  NO_AUTH_ERR,
+                  [
+                    {text: 'OK', onPress: () => console.log('OK Pressed')},
+                  ],
+                  {cancelable: true},
+               );
+		return Login;
+	} else{
+		return WrappedComponent;
+	}
+}
+
 export const Screen = (props, nav) => {
-	console.log(props);
 	return(
 		<View style={[styles.screen_view, {backgroundColor: "#fff"}]}>
 			<Image style={styles.screen_img} source={props.img}/>

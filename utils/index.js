@@ -4,6 +4,40 @@ import {Alert, AsyncStorage} from 'react-native';
 const API_BASE_URL = "http://ayongaji.wartaqi.com/public/api/";
 const LOGIN_API = API_BASE_URL + "login";
 const NEAR_USTADZ_API = API_BASE_URL + "nearust";
+const PAKETS_API = API_BASE_URL + "pakets";
+
+const ACTION_ERR = 'Maaf, saat ini permintaan anda tidak dapat diproses';
+
+//function dibawah ini milik malasngoding.com
+function formatRupiah(angka, prefix){
+      let separator;
+      var number_string = angka.replace(/[^,\d]/g, '').toString(),
+      split       = number_string.split(','),
+      sisa        = split[0].length % 3,
+      rupiah        = split[0].substr(0, sisa),
+      ribuan        = split[0].substr(sisa).match(/\d{3}/gi);
+ 
+      // tambahkan titik jika yang di input sudah menjadi angka ribuan
+      if(ribuan){
+        separator = sisa ? '.' : '';
+        rupiah += separator + ribuan.join('.');
+      }
+ 
+      rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+      return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
+}
+
+function errorAlert(error_text){
+  return Alert.alert(
+                  'Error',
+                  error_text,
+                  [
+                    {text: 'OK'},
+                  ],
+                  {cancelable: true},
+               );
+}
+
 
 function checkApiParams(params){
   const { api_method, auth_token, api_url, ...others} = params;
@@ -12,6 +46,20 @@ function checkApiParams(params){
   } else if(!api_method){
     return false;
   }
+}
+
+function toUrlEncoded(form_object){
+      let formBody=[];
+
+      for(let key in form_object) {
+        const encoded_key = encodeURIComponent(key);
+        const encoded_value = encodeURIComponent(form_object[key]);
+        formBody.push(encoded_key + "=" + encoded_value);
+      }
+
+      formBody = formBody.join("&");
+
+      return formBody;
 }
 
 function axiosConfig(params){
@@ -28,27 +76,84 @@ function axiosConfig(params){
   return config;
 }
 
-async function fetchData(config) {
-  //fetchnya sync tapi nanti pake loading, loadingnya tinggal pake alert
-  try{
-    const response = await axios(axiosConfig(config));
-    const json = await response.data;
-      console.log(json);
-      return json;
-  } catch{
-    console.log('error');
+function errorParser(url){
+  switch(url){
+    case 'NEAR_USTADZ_API':
+      return "Tidak ada ustadz yang tersedia" 
+      break;
+    case 'PAKETS':
+      return "Maaf, tidak ada paket belajar yang tersedia" 
+      break;
   }
-	
+}
+
+async function fetchData(config) {
+  console.log(PAKETS_API);
+    const { url,  requestOptions, api_token } = config;
+    let { body } = requestOptions;
+    let myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+    myHeaders.append("Accept", "application/json"); 
+
+    if(api_token){
+      myHeaders.append("Authorization", "Bearer " + api_token);
+    }
+    requestOptions.headers = myHeaders;
+
+    if(body){
+      body = toUrlEncoded(body);
+    }
+
+    try {
+      const response = await fetch(url, requestOptions);
+      const result = await response.json();
+      if(!result || !result.length){
+        errorAlert(errorParser(url));
+        return false;
+      } 
+      console.log(result);
+      return result;
+    } catch (error) {
+        errorAlert(ACTION_ERR);
+    }
 }
 
 async function storeData(key, value){
   try {
     await AsyncStorage.setItem(key, value);
   } catch (error) {
-    console.log(error);
      		Alert.alert(
               'Terjadi Kesalahan',
               'Silakan ulang kembali.',
+              [
+                {text: 'OK', onPress: () => console.log('OK Pressed')},
+              ],
+              {cancelable: true},
+            );
+  }
+}
+
+async function removeData(key){
+  try {
+    const value = await AsyncStorage.removeItem(key);
+    const item = await takeData(key);
+   // console.log(item);
+    if(item !== null){
+        Alert.alert(
+              'Oops...Terjadi Kesalahan',
+              'Silakan coba kembali',
+              [
+                {text: 'OK', onPress: () => console.log('OK Pressed')},
+              ],
+              {cancelable: true},
+            );
+    }
+    else return true;
+  } catch (error) {
+    console.log(error);
+        Alert.alert(
+              'Terjadi Kesalahan',
+              'Aksi gagal dilakukan',
               [
                 {text: 'OK', onPress: () => console.log('OK Pressed')},
               ],
@@ -61,9 +166,7 @@ async function storeData(key, value){
 async function takeData(key){
   try {
     const value = await AsyncStorage.getItem(key);
-    if (value !== null) {
-      return value;
-    }
+    return value;
   } catch (error) {
     		Alert.alert(
               'Terjadi Kesalahan',
@@ -79,9 +182,13 @@ async function takeData(key){
 
 export {
 	fetchData,
+  errorAlert,
   takeData,
   storeData,
+  removeData,
   axiosConfig,
+  formatRupiah,
 	LOGIN_API,
+  PAKETS_API,
   NEAR_USTADZ_API
 }

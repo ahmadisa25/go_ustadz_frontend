@@ -8,8 +8,11 @@ List Front End:
 15. History order kasih use effect manggil api
 21. Kalau belum pernah diactivate akunnya baru ke onboarding, ini pengecekannya after login. Kalau baru pertama kali install muncul
 22. Daftar paket konekin ke API
-1. Simpen session di storage + Auth Check
-2. Setiap halaman harus ngelewatin auth check except login, register onboarding. Kalau nggak ada, throw ke login
-3. Embed auth check di setiap halaman pakai Wrapper components
-4. Get token dari login, simpen di axios config
+23. Login kalau usernya udah ada balikin ke home
+24. Disable back button pas di home, got ustadz
 5. Balikin error dari api untuk setiap halaman via alert
+6. Bikin function yang ngecek semua error
+7. Bikin logout!
+8. Ngecek juga apakah user data masih ada atau tidak
+9. Format harga ke rupiah
+10. Nyatet order ke database

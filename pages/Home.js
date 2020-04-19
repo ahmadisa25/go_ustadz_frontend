@@ -6,7 +6,7 @@ import {
   View,
   Image,
   ImageBackground,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
 } from 'react-native';
 import Slideshow from 'react-native-slideshow';
 
@@ -23,6 +23,8 @@ import profile from '../assets/icons/profile-icon.png';
 import banner_td from '../assets/banner-taawun-dakwah-new.png';
 import logo from '../assets/logo.png'; 
 
+import { takeData, removeData } from '../utils';
+
 export default function Home({route, navigation}) {
     return (
       <>
@@ -35,19 +37,19 @@ export default function Home({route, navigation}) {
           />
           <Text style={styles.subtitle}>Mau Apa Hari Ini?</Text>
           <View style={styles.container}>
-              <TouchableWithoutFeedback onPress={() => {navigation.navigate("Ilmu Qur'an")}}>
+              <TouchableWithoutFeedback onPress={() => {navigation.navigate("Pilih Topik", {tipe: "qur'an"})}}>
                  <View style={styles.home_grid_box} >
                   <Image source={quran} style={styles.home_grid_boxImage}/>
                   <Text style={[styles.home_grid_boxText]}>Ilmu Qur'an</Text>
                 </View>
               </TouchableWithoutFeedback>
-              <TouchableWithoutFeedback onPress={() => {navigation.navigate("Ilmu Agama")}}>
+              <TouchableWithoutFeedback onPress={() => {navigation.navigate("Pilih Topik", {tipe: "agama"})}}>
                   <View style={styles.home_grid_box}>
                     <Image source={islam} style={styles.home_grid_boxImage}/>
                     <Text style={[styles.home_grid_boxText]}>Ilmu Agama</Text>
                   </View>
               </TouchableWithoutFeedback>
-              <TouchableWithoutFeedback onPress={() => {navigation.navigate("Ilmu Umum")}}>
+              <TouchableWithoutFeedback onPress={() => {navigation.navigate("Pilih Topik", {tipe: "umum"})}}>
                 <View style={styles.home_grid_box}>
                   <Image source={umum} style={styles.home_grid_boxImage}/>
                   <Text style={[styles.home_grid_boxText]}>Ilmu Umum</Text>
@@ -76,13 +78,15 @@ export default function Home({route, navigation}) {
           </View>
         <View style={styles.tab_box}>
             <View style={[styles.grid_box, styles.sofyan_blue]}>
-              <Image source={home} style={styles.tab_boxIcon} onClick={ () => mapStateToProps({current_page: "Home"})}/>
+              <Image source={home} style={styles.tab_boxIcon}/>
               <Text style={[styles.grid_boxText]}>Beranda</Text>
             </View>
-            <View style={[styles.grid_box, styles.sofyan_blue]}>
-              <Image source={profile} style={styles.tab_boxIcon}/>
-               <Text style={[styles.grid_boxText]}>Profil</Text>
-            </View>
+            <TouchableWithoutFeedback  onPress={() => navigation.navigate('Profil')}>
+              <View style={[styles.grid_box, styles.sofyan_blue]}>
+                <Image source={profile} style={styles.tab_boxIcon}/>
+                 <Text style={[styles.grid_boxText]}>Profil</Text>
+              </View>
+            </TouchableWithoutFeedback>
             <TouchableWithoutFeedback  onPress={() => navigation.navigate('Histori Belajar')}>
               <View style={[styles.grid_box, styles.sofyan_blue]}>
                 <Image source={history} style={styles.tab_boxIcon}/>
