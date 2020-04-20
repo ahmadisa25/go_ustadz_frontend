@@ -1,43 +1,7 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { ScrollView, View, FlatList, StyleSheet, Text, Image, Button } from 'react-native';
 
-const DATA = [
-	{
-		id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-		title: 'Infaq Konsultasi 1',
-		price: 'Rp10.000/jam',
-		ustadz: 'Ruslan Gani S. Pi',
-		tanggal: '28/02/2020'
-	},
-	{
-		id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-		title: 'Infaq Konsulatsi 2',
-		price: 'Rp25.000/Jam',
-		ustadz: 'Ruslan Gani S. Pi',
-		tanggal: '28/02/2020'
-	},
-	{
-		id: '58694a0f-3da1-471f-bd96-145571e29d72',
-		title: 'Infaq Kursus 1',
-		price: 'Rp50.000/Bulan',
-		ustadz: 'Ruslan Gani S. Pi',
-		tanggal: '24/02/2020'
-	},
-	{
-		id: '58694a0f-3da1-471f-bd96-145571e29d72',
-		title: 'Infaq Kursus 2',
-		price: 'Rp60.000/Bulan',
-		ustadz: 'Ruslan Gani S. Pi',
-		tanggal: '23/02/2020'
-	},
-	{
-		id: '58694a0f-3da1-471f-bd96-145571e29d72',
-		title: 'Infaq Intensif 1',
-		price: 'Rp150.000/Bulan',
-		ustadz: 'Ruslan Gani S. Pi',
-		tanggal: '21/02/2020'
-	},
-];
+import { USER_ORDERS_API, fetchData, takeData, errorAlert } from '../utils';
 
 const Item = ({ title, price, ...props}) => {
 	//const [showModal, setShowModal] = useState(false);
@@ -48,6 +12,7 @@ const Item = ({ title, price, ...props}) => {
 				<Text style={styles.tanggal_order}>{props.tanggal}</Text>
 				<Text style={styles.title}>{title}</Text>
 				<Text style={styles.price}>{price}</Text>
+				<Text>{props.topic}</Text>
 				<Text>{props.ustadz}</Text>
 			</View>
 		</View>
@@ -55,15 +20,46 @@ const Item = ({ title, price, ...props}) => {
 }
 
 export default function HistoryOrder({route, navigation, props}) {
-	const { user } = route.params;
+	let fetchConfig = {
+	    requestOptions: {
+	        method: 'GET',
+	        body: "",
+	        redirect: 'follow'
+	    },
+	    url: USER_ORDERS_API,
+	    api_token: ""
+	}
+	const [history, setHistory] = useState([]);
+	const getStorageData = async (key) =>{ 
+		const user_data = await takeData(key);
+		const { id, api_token } = JSON.parse(user_data);
+		fetchConfig.api_token = api_token;
+		fetchConfig.url +="/" + id;
+		const data = await fetchData(fetchConfig);
+		console.log(data);
+		if(!data){
+			const HISTORY_ERR = 'Maaf, saat ini data histori belajar anda belum dapat diambil. Coba beberapa saat lagi.'
+			errorAlert(HISTORY_ERR);
+			nav.navigate('Beranda');
+		} else setHistory(data);
+	}
+
+	useEffect( () => {
+		getStorageData('user_data');
+		//let user_data = getStorageData('user_data');
+		//console.log(user_data);
+		/*fetchConfig.api_token = api_token;
+		*/
+  	 }, []);
 	return (
 		<ScrollView style={styles.container}>
 			<View style={styles.container}>
-				<FlatList
-				data={DATA}
-				renderItem={({ item }) => <Item title={item.title} tanggal={item.tanggal} ustadz={item.ustadz} price={item.price} nav={navigation} user={user}/>}
+				{history && <FlatList
+				data={history}
+				renderItem={({ item }) => <Item title={item.paket.nama + " " + item.paket.durasi} tanggal={item.created_at} topic={item.topic} ustadz={item.server} price={item.price} nav={navigation}/>}
 				keyExtractor={item => item.id}
-				/>
+				/>}
+				{!history.length && <Text style={{flex:1, alignItems:'center', color:'#fff'}}>Sedang Memuat....</Text>}
 			</View>
 		</ScrollView>
 	);

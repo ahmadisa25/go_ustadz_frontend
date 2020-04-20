@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { View, Image, Text, TouchableOpacity, TextInput, StyleSheet, Alert, Modal, TouchableWithoutFeedback } from 'react-native';
 
-import { fetchData, storeData, errorAlert, removeData, takeData } from '../utils/';
+import { fetchData, storeData, errorAlert, removeData, basicAlert } from '../utils/';
 import loc from '../assets/icons/loc-icon.png';
 
 const sampleUser = {
@@ -11,25 +11,25 @@ const sampleUser = {
       "foto_profil": "https://upload.wikimedia.org/wikipedia/commons/4/4a/Mohamed_Salah_2018.jpg"
 }
 
-class Login extends Component {
+
+class RegisterUser extends Component {
 	state = {
+		nama: '',
+		telepon: '',
 		email: '',
 		password: '',
 		loadingVisible: false,
-		warningVisible: true
 	}
 
-	handleEmail = (text) => {
-		this.setState({ email: text })
+	handleInput = (name) => {
+		return (text) => {
+			this.setState({ [name]: text })
+		}
 	}
 
-	handlePassword = (text) => {
-		this.setState({ password: text })
-	}
 
 	login = (event) => {
-		//fetch data user disini
-		const { email, password } = this.state;
+		const { email, password, nama, telepon } = this.state;
 		const { navigation } = this.props;
 		if(email && password) {
 			let myHeaders = new Headers();
@@ -37,8 +37,10 @@ class Login extends Component {
 			myHeaders.append("Accept", "application/json");	
 
 			const body = {
+				nama: nama,
 				email: email,
-				password: password
+				password: password,
+				telepon: telepon,
 			}
 
 			let formBody = [];
@@ -60,16 +62,18 @@ class Login extends Component {
 
 			this.setState({loadingVisible: true});
 
-			fetch("http://ayongaji.wartaqi.com/public/api/login", requestOptions)
+			fetch("http://ayongaji.wartaqi.com/public/api/users", requestOptions)
 			  .then(response => response.json())
 			  .then(async (result) => {
+			  	console.log(result);
 			  	if(!result.msg && !result.errors){
+			  		basicAlert('Sukses', "Registrasi Berhasil");
 			  		const data = await storeData('user_data', JSON.stringify(result));
-			  		navigation.navigate('Beranda');
+			  		navigation.navigate('Login');
 					this.setState({loadingVisible: false});
 			  	} else{
 			  		this.setState({loadingVisible: false});
-			  		const error_text ='Email atau password salah';
+			  		const error_text ='Silakan cek kembali isian anda.';
 			  		errorAlert(error_text);
 			  	}
 			  	
@@ -80,33 +84,12 @@ class Login extends Component {
 
 	render() {
 		const {navigation} = this.props;
-		let { loadingVisible, warningVisible } = this.state;
 		return(
 			  <>
-			  	<Modal
+			  <Modal
 		          animationType="slide"
 		          transparent={true}
-		          visible={warningVisible}
-		        >
-			        <View style={styles.centeredView}>
-			        	<View style={styles.modalView}>
-		            		<Image source={loc}/>
-							<Text style={styles.gps_warning}>Ayo Ngaji adalah sebuah aplikasi yang dapat membantu anda untuk mencari ustadz yang dapat menemani anda belajar.</Text>
-							<Text style={styles.gps_warning}>Agar dapat membantu anda dalam hal tersebut, kami memerlukan GPS dan izin akses lokasi anda.</Text>
-							<Text style={styles.gps_warning}>Anda dapat mengatur keduanya pada bagian pengaturan atau Settings di perangkat anda.</Text>
-							<TouchableOpacity style={styles.gps_ok_touch} onPress={() => {
-									this.setState({warningVisible: false});
-								}
-							}>
-								<Text style={styles.gps_ok_btn}>OK</Text>
-							</TouchableOpacity>
-						</View>
-			       	</View>
-		        </Modal>
-				<Modal
-		          animationType="slide"
-		          transparent={true}
-		          visible={loadingVisible}
+		          visible={this.state.loadingVisible}
 		        >
 			        <View style={styles.centeredView}>
 	            		<View style={styles.modalView}>
@@ -120,32 +103,47 @@ class Login extends Component {
 							Ayo 
 						</Text>
 						<Text style={styles.paragraph}>Ngaji!</Text>
-						<Text style={styles.judul}>LOGIN</Text>
+						<Text style={styles.judul}>REGISTER</Text>
+						<TextInput style = {styles.input}
+						underlineColorAndroid = "transparent"
+						placeholder = "Nama Anda"
+						name="nama"
+						placeholderTextColor = "#3b5998"
+						autoCapitalize = "none"
+						onChangeText = {this.handleInput('nama')}/>
 						<TextInput style={styles.input}
 						underlineColorAndroid = "transparent"
 						placeholder = "Email"
+						name="email"
 						placeholderTextColor = "#3b5998"
 						autoCapitalize="none"
 						autoCompleteType="email"
 						textContentType="emailAddress"
 						keyboardType="email-address"
-						onChangeText={this.handleEmail}
+						onChangeText={this.handleInput('email')}
 						/>
 						<TextInput style = {styles.input}
 						secureTextEntry={true}
 						underlineColorAndroid = "transparent"
 						placeholder = "Password"
+						name="password"
 						placeholderTextColor = "#3b5998"
 						autoCapitalize="none"
-						onChangeText={this.handlePassword}/>
-
+						onChangeText={this.handleInput('password')}/>
+						<TextInput style = {styles.input}
+						underlineColorAndroid = "transparent"
+						placeholder = "No. HP Aktif"
+						placeholderTextColor = "#3b5998"
+						keyboardType="number-pad"
+						autoCapitalize = "none"
+						onChangeText = {this.handleInput('telepon')}/> 
 						<TouchableOpacity style={styles.submitButton} onPress={this.login}>
-							<Text style = {styles.submitButtonText}>LOGIN</Text>
+							<Text style = {styles.submitButtonText}>DAFTAR</Text>
 						</TouchableOpacity>
-
-						<Text style={styles.register_text}>Belum punya akun? 
-							<TouchableWithoutFeedback onPress={() => navigation.navigate('Register')}>
-								<Text style={styles.register_link}>Daftar disini</Text>
+						<Text style={styles.info_text}>* Dalam pengisian password diperhatikan agar memiliki karakter alfabet (ada yang kapital dan tidak), angka dan simbol. Password juga harus memiliki minimal 8 karakter. </Text>
+						<Text style={styles.register_text}>Sudah memiliki akun? Silakan login
+							<TouchableWithoutFeedback onPress={() => navigation.navigate('Login')}>
+								<Text style={styles.register_link}> disini</Text>
 							</TouchableWithoutFeedback>
 						</Text>
 					</View>
@@ -154,9 +152,13 @@ class Login extends Component {
 		)
 	}
 }
-export default Login;
+export default RegisterUser;
 
 const styles = StyleSheet.create({
+	info_text:{
+		textAlign: 'center',
+		fontStyle: 'italic'
+	},
 	gps_ok_touch: {
 		margin: 10
 	},

@@ -7,6 +7,7 @@ import {
   Image,
   ImageBackground,
   TouchableWithoutFeedback,
+  BackHandler
 } from 'react-native';
 import Slideshow from 'react-native-slideshow';
 
@@ -26,6 +27,9 @@ import logo from '../assets/logo.png';
 import { takeData, removeData } from '../utils';
 
 export default function Home({route, navigation}) {
+  BackHandler.addEventListener('hardwareBackPress', function() {
+    return true;
+});
     return (
       <>
         <Slideshow 
@@ -57,7 +61,7 @@ export default function Home({route, navigation}) {
               </TouchableWithoutFeedback>
           </View>
           <View style={styles.container}>
-              <TouchableWithoutFeedback onPress={() => navigation.navigate('Artikel', {url: "https://sofyanruray.info/artikel-app"})}>
+              <TouchableWithoutFeedback onPress={() => navigation.navigate('Artikel', {url: "http://ayongaji.wartaqi.com/blog/"})}>
                 <View style={styles.home_grid_box}>
                   <Image source={article} style={styles.home_grid_boxImage}/>
                   <Text style={[styles.home_grid_boxText]}>Artikel</Text>
@@ -69,7 +73,7 @@ export default function Home({route, navigation}) {
                   <Text style={[styles.home_grid_boxText]}>Kajian</Text>
                 </View>
               </TouchableWithoutFeedback>
-              <TouchableWithoutFeedback  onPress={() => navigation.navigate('Konsultasi', {url: "https://sofyanruray.info/tanya-jawab-app/"})}>
+              <TouchableWithoutFeedback  onPress={() => navigation.navigate('Konsultasi', {url: "http://ayongaji.wartaqi.com/blog/index.php/tanya-jawab"})}>
                 <View style={styles.home_grid_box}>
                   <Image source={qa} style={styles.home_grid_boxImage}/>
                   <Text style={[styles.home_grid_boxText]}>Tanya Jawab</Text>

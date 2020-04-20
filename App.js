@@ -6,6 +6,7 @@ import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import Home from './pages/Home';
 import Login from './pages/Login';
+import RegisterUser from './pages/RegisterUser';
 import Subcategories from './pages/Subcategories';
 import ViewWeb from './pages/ViewWeb';
 import GotUstadz from './pages/GotUstadz';
@@ -94,7 +95,8 @@ export default function App({navigation}) {
             <Stack.Screen options={{headerShown: false}}  name="Screen Two" component={ScreenTwo} />
             <Stack.Screen options={{headerShown: false}} name="Screen Three" component={ScreenThree} />
            </>*/}
-          {/*<Stack.Screen name="Login" options={{headerShown: false}} component={Login} />*/}
+          <Stack.Screen name="Login" options={{headerShown: false}} component={Login} />
+          <Stack.Screen name="Register" options={{headerShown: false}} component={RegisterUser} />
           <Stack.Screen name="Beranda" options={{headerLeft: null}} component={Home} />
           <Stack.Screen name="Profil" component={Profile} />
           <Stack.Screen name="Loading" component={Loading} />

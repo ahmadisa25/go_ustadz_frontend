@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { ScrollView, View, FlatList, StyleSheet, Text, Image, Button } from 'react-native';
 
-import { fetchData, takeData, PAKETS_API } from '../utils';
+import { takeData } from '../utils';
 
 const Item = ({ property, value }) => {
 	return (
@@ -17,16 +17,7 @@ const Item = ({ property, value }) => {
 }
 
 export default function Profile({route, navigation, props}) {
-	let fetchConfig = {
-	    requestOptions: {
-	        method: 'GET',
-	        body: "",
-	        redirect: 'follow'
-	    },
-	    url: PAKETS_API,
-	    api_token: ""
-	}
-	let [user, setUser] = useState([]);
+	let [user, setUser] = useState('');
 	const getStorageData = async (key) =>{ 
 		const user_data = await takeData(key);
 		setUser(user_data);
@@ -35,8 +26,10 @@ export default function Profile({route, navigation, props}) {
 	useEffect( () => {
 		getStorageData('user_data');
   	 }, []);
-	const user_obj = JSON.parse(user);
-	return (
+	
+	if(user) {
+		const user_obj = JSON.parse(user);
+		return (
 		<ScrollView style={styles.container}>
 			<View style={styles.profile_view}>
 				<Image source={{uri: user_obj.profile_picture}} style={styles.avatar}/>
@@ -52,6 +45,14 @@ export default function Profile({route, navigation, props}) {
 			</View>
 		</ScrollView>
 	);
+	} else{
+		return <ScrollView style={styles.container}>
+				<View style={styles.profile_view}>
+					<Text>Sedang Memuat....</Text>
+				</View>
+		</ScrollView>
+	}
+	
 }
 
 const styles = StyleSheet.create({

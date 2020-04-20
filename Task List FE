@@ -5,14 +5,9 @@ List Front End:
 - User
 -Error dari API
 14. Splash Dengan Logo Aplikasi
-15. History order kasih use effect manggil api
-21. Kalau belum pernah diactivate akunnya baru ke onboarding, ini pengecekannya after login. Kalau baru pertama kali install muncul
-22. Daftar paket konekin ke API
-23. Login kalau usernya udah ada balikin ke home
-24. Disable back button pas di home, got ustadz
-5. Balikin error dari api untuk setiap halaman via alert
-6. Bikin function yang ngecek semua error
-7. Bikin logout!
-8. Ngecek juga apakah user data masih ada atau tidak
-9. Format harga ke rupiah
-10. Nyatet order ke database
+24. Disable back button pas di home, got ustadz (kalau got ustadz jadi balik lagi ke beranda)
+25. Tambahin error di home kalau tidak ada
+26. Privacy Notice // warning kalau datanya akan disimpen di kita, dan akan kita jaga. sampein ke tim kalau jangan disebar data user kecuali required by law
+27. Warning maksimal hanya 3 order/hari ---> lagi pengerjaan di halaman subcategories
+29. Register
+30. Form tanya jawab pake wp

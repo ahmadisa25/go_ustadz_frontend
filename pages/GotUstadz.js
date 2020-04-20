@@ -82,6 +82,8 @@ export default function GotUstadz({route, navigation, props}) {
 		fetchConfig.api_token = api_token;
 		const data = await fetchData(fetchConfig);
 		if(!data){
+			const PAKET_ERR = 'Maaf, saat ini data paket belajar belum dapat diambil. Coba beberapa saat lagi.'
+			errorAlert(PAKET_ERR);
 			nav.navigate('Beranda');
 		} else setPakets(data);
 	}

@@ -6,6 +6,7 @@ const LOGIN_API = API_BASE_URL + "login";
 const NEAR_USTADZ_API = API_BASE_URL + "nearust";
 const PAKETS_API = API_BASE_URL + "pakets";
 const ORDERS_API = API_BASE_URL + "orders";
+const USER_ORDERS_API = API_BASE_URL + "userorders";
 
 const ACTION_ERR = 'Maaf, saat ini permintaan anda tidak dapat diproses';
 
@@ -44,6 +45,17 @@ function errorAlert(error_text){
   return Alert.alert(
     'Error',
     error_text,
+    [
+      {text: 'OK'},
+    ],
+    {cancelable: true},
+ );
+}
+
+function basicAlert(title, text){
+  return Alert.alert(
+    title,
+    text,
     [
       {text: 'OK'},
     ],
@@ -115,8 +127,7 @@ async function fetchData(config) {
     if(body){
       requestOptions.body = toUrlEncoded(body);
     }
-
-
+    console.log(requestOptions);
     try {
       const response = await fetch(url, requestOptions);
       const result = await response.json();
@@ -195,6 +206,7 @@ async function takeData(key){
 export {
 	fetchData,
   errorAlert,
+  basicAlert,
   takeData,
   storeData,
   removeData,
@@ -204,5 +216,6 @@ export {
 	LOGIN_API,
   ORDERS_API,
   PAKETS_API,
-  NEAR_USTADZ_API
+  NEAR_USTADZ_API,
+  USER_ORDERS_API
 }
