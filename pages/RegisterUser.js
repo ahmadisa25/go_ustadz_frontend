@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Image, Text, TouchableOpacity, TextInput, StyleSheet, Alert, Modal, TouchableWithoutFeedback } from 'react-native';
+import { View, ScrollView, Image, Text, TouchableOpacity, TextInput, StyleSheet, Alert, Modal, TouchableWithoutFeedback } from 'react-native';
 
 import { fetchData, storeData, errorAlert, removeData, basicAlert } from '../utils/';
 import loc from '../assets/icons/loc-icon.png';
@@ -19,6 +19,7 @@ class RegisterUser extends Component {
 		email: '',
 		password: '',
 		loadingVisible: false,
+		noticeVisible: false,
 	}
 
 	handleInput = (name) => {
@@ -89,6 +90,25 @@ class RegisterUser extends Component {
 			  <Modal
 		          animationType="slide"
 		          transparent={true}
+		          visible={this.state.noticeVisible}
+		        >
+			        <View style={styles.centeredView}>
+			        	<View style={styles.modalView}>
+							<Text style={styles.gps_warning}>Dengan melakukan registrasi di aplikasi Ayo Ngaji anda menyadari dan menyetujui bahwa data pribadi anda akan ada dalam pemeliharaan kami</Text>
+							<Text style={styles.gps_warning}>Kami hanya menggunakkan data pribadi anda semata hanya untuk keperluan menyediakan fitur yang anda minta.</Text>
+							<Text style={styles.gps_warning}>Insya Allah, Kami tidak akan menjual atau menyalahgunakan data pribadi anda tersebut.</Text>
+							<TouchableOpacity style={styles.gps_ok_touch} onPress={() => {
+									this.setState({noticeVisible: false});
+								}
+							}>
+								<Text style={styles.gps_ok_btn}>OK</Text>
+							</TouchableOpacity>
+						</View>
+			       	</View>
+		        </Modal>
+			  <Modal
+		          animationType="slide"
+		          transparent={true}
 		          visible={this.state.loadingVisible}
 		        >
 			        <View style={styles.centeredView}>
@@ -97,6 +117,7 @@ class RegisterUser extends Component {
 			        	</View>
 			       	</View>
 		        </Modal>
+				<ScrollView>
 				<View style={styles.container}>
 					<View style={styles.card}>
 						<Text style={styles.paragraph}>
@@ -141,13 +162,17 @@ class RegisterUser extends Component {
 							<Text style = {styles.submitButtonText}>DAFTAR</Text>
 						</TouchableOpacity>
 						<Text style={styles.info_text}>* Dalam pengisian password diperhatikan agar memiliki karakter alfabet (ada yang kapital dan tidak), angka dan simbol. Password juga harus memiliki minimal 8 karakter. </Text>
+						<Text style={styles.info_text}>* Dengan melakukan registrasi, maka anda telah membaca dan menyetujui <TouchableWithoutFeedback onPress={() => this.setState({noticeVisible: true})}>
+								<Text style={styles.register_link}> Maklumat Privasi</Text>
+							</TouchableWithoutFeedback> kami</Text>
 						<Text style={styles.register_text}>Sudah memiliki akun? Silakan login
 							<TouchableWithoutFeedback onPress={() => navigation.navigate('Login')}>
 								<Text style={styles.register_link}> disini</Text>
 							</TouchableWithoutFeedback>
 						</Text>
 					</View>
-				</View>
+				 </View>
+				</ScrollView>
 			</>
 		)
 	}
@@ -157,7 +182,8 @@ export default RegisterUser;
 const styles = StyleSheet.create({
 	info_text:{
 		textAlign: 'center',
-		fontStyle: 'italic'
+		fontStyle: 'italic',
+		margin: 5
 	},
 	gps_ok_touch: {
 		margin: 10
@@ -185,7 +211,6 @@ const styles = StyleSheet.create({
 	    flex: 1,
 	    justifyContent: "center",
 	    alignItems: "center",
-	    marginTop: 22,
 	    backgroundColor: 'rgba(0, 0, 0, 0.5)'
   	},
   	modalView: {

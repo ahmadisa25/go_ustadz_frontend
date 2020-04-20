@@ -69,48 +69,27 @@ const onTopicClick = async (click, embedded_obj) => {
     let user_data = await takeData('user_data');
     location = JSON.parse(location);
     const {latitude, longitude} = location.coords;
-    const { api_token } = JSON.parse(user_data);
-    fetchConfig.api_token = api_token;
-    fetchConfig.url+="?lat_alamat="+latitude+"&long_alamat="+longitude+"&topic="+topic;
-    const ustadz = await fetchData(fetchConfig);
-    if(!ustadz){
-      const SELECT_ERR = 'Maaf saat ini pembelajaran belum bisa dilakukan. Coba beberapa saat lagi.'
-      errorAlert(SELECT_ERR);
+    const { api_token, total_order } = JSON.parse(user_data);
+    if(total_order >= 5){
+       const LEARN_ERR = 'Maaf, anda sudah berada pada batas belajar maksimum yaitu 5 kali/hari.'
+      errorAlert(LEARN_ERR);
       nav.navigate('Beranda');
+    } else {
+      fetchConfig.api_token = api_token;
+        fetchConfig.url+="?lat_alamat="+latitude+"&long_alamat="+longitude+"&topic="+topic;
+      const ustadz = await fetchData(fetchConfig);
+      if(!ustadz){
+        const SELECT_ERR = 'Maaf saat ini pembelajaran belum bisa dilakukan. Coba beberapa saat lagi.'
+        errorAlert(SELECT_ERR);
+        nav.navigate('Beranda');
+      }
+      nav.navigate('Ustadz Ditemukan', {ustadz: ustadz[0], topic: topic});
     }
-    nav.navigate('Ustadz Ditemukan', {ustadz: ustadz[0], topic: topic});
+    
   }
 
 
-export default function Subcategories({route, navigation}) {
-  let fetchConfig = {
-      requestOptions: {
-          method: 'GET',
-          body: "",
-          redirect: 'follow'
-      },
-      url: USER_ORDERS_API,
-      api_token: ""
-  }
-  const [historySize, setHistorySize] = useState([]);
-  const getStorageData = async (key) =>{ 
-    const user_data = await takeData(key);
-    const { id, api_token } = JSON.parse(user_data);
-    fetchConfig.api_token = api_token;
-    fetchConfig.url +="/" + id;
-    const data = await fetchData(fetchConfig);
-    console.log(data.length);
-    if(!data){
-      const HISTORY_ERR = 'Maaf, saat ini data histori belajar anda belum dapat diambil. Coba beberapa saat lagi.'
-      errorAlert(HISTORY_ERR);
-      nav.navigate('Beranda');
-    } else setHistorySize(data);
-  }
-
-  useEffect( () => {
-    getStorageData('user_data');
-     }, []);
-  
+export default function Subcategories({route, navigation}) {  
     const { tipe } = route.params;
     const [loading, setLoading] = useState(false);
     if(!loading)
